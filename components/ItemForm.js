@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Spinner from "./Spinner";
 import { ReactSortable } from "react-sortablejs";
 
@@ -10,17 +10,25 @@ title:existingTitle,
 description:existingDescription, 
 amount: existingAmount,
 images: existingImages,
+category:assignedCategory,
 }) {
     const [title, setTitle] =  useState(existingTitle || '');
     const [description, setDescription] = useState(existingDescription || '');
+    const [category, setCategory] = useState(assignedCategory || '');
     const [amount, setAmount] = useState(existingAmount || '');
     const [images, setImages] = useState(existingImages || []);
     const [goToItems, setGoToItems] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
+    const [categories, setCategories] = useState([]);
     const router = useRouter();
+    useEffect(() => {
+        axios.get('/api/categories').then(result => {
+            setCategories(result.data);
+        })
+    }, [])
     async function saveItem(ev) {
         ev.preventDefault();
-        const data = {title, description, amount, images}
+        const data = {title, description, amount, images, category}
         if (_id) {
             //update
             await axios.put('/api/items', {...data, _id});
@@ -60,6 +68,16 @@ images: existingImages,
                 value={title} 
                 onChange={ev => setTitle(ev.target.value)}
             />
+            <label>Category</label>
+            <select 
+                value={category}
+                onChange={ev => setCategory(ev.target.value)}
+            >
+                <option value=''>Uncategorized</option>
+                {categories.length > 0 && categories.map(category => (
+                    <option value={category._id}>{category.name}</option>
+                ))}
+            </select>
 
             <label>Photos</label>
             <div className='mb-2 flex flex-wrap gap-1'>
