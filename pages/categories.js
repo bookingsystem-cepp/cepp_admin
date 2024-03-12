@@ -6,6 +6,8 @@ import { withSwal } from 'react-sweetalert2';
 function Categories({swal}) {
     const [editedCategory, setEditedCategory] = useState(null);
     const [name, setName] = useState('');
+    const [location, setLocation] = useState('');
+    const [description, setDescription] = useState('');
     const [parentCategory, setParentCategory] = useState('');
     const [categories, setCategories] = useState([]);
     useEffect(() => {
@@ -19,7 +21,7 @@ function Categories({swal}) {
     }
     async function saveCategory(ev){
         ev.preventDefault();
-        const data = {name, parentCategory};
+        const data = {name, parentCategory, location, description};
         if (editedCategory) {
             data._id = editedCategory._id
             await axios.put('/api/categories', data);  
@@ -28,13 +30,16 @@ function Categories({swal}) {
             await axios.post('/api/categories', data);
         }
         setName('');
+        setLocation('');
+        setDescription('');
         fetchCategories();
     }
     function editCategory(category){
         setEditedCategory(category);
         setName(category.name);
+        setLocation(category.location);
+        setDescription(category.description);
         setParentCategory(category.parent?._id);
-        
     }
     function deleteCategory(category){
         swal.fire({
@@ -48,7 +53,14 @@ function Categories({swal}) {
         }).then(async result => {
             if (result.isConfirmed) {
                 const {_id} = category;
-                await axios.delete('/api/categories?_id='+_id);
+                const result = await axios.delete('/api/categories?_id='+_id);
+                if(result.data === 'error') {
+                    swal.fire({
+                        title: 'Can\' Delete!',
+                        text: `Might have items in this category or child category`,
+                        confirmButtonColor: 'primary'
+                    })
+                }    
                 fetchCategories();
             }
         });
@@ -66,9 +78,15 @@ function Categories({swal}) {
                 <div className="flex gap-1">
                     <input 
                         type="text" 
-                        placeholder={'Category name'}
+                        placeholder={'category name'}
                         onChange={ev => setName(ev.target.value)}
                         value={name}
+                    />
+                    <input 
+                        type="text" 
+                        placeholder={'location'}
+                        onChange={ev => setLocation(ev.target.value)}
+                        value={location}
                     />
                     <select 
                         onChange={ev => setParentCategory(ev.target.value)}
@@ -84,7 +102,11 @@ function Categories({swal}) {
                 </div>
                 <div className="mb-2">
                     <label className="block">Description</label>
-                    
+                    <textarea 
+                        placeholder='description' 
+                        value={description}
+                        onChange={ev => setDescription(ev.target.value)}
+                    />
                 </div>
                 <button type='submit' className="btn-primary py-1">Save</button>
             </form>
@@ -104,13 +126,13 @@ function Categories({swal}) {
                             <td>
                                 <button 
                                     onClick={() => editCategory(category)} 
-                                    className="btn-primary mr-1"
+                                    className="btn-default mr-1"
                                 >
                                     Edit
                                 </button>
                                 <button 
                                     onClick={() => deleteCategory(category)}
-                                    className="btn-primary"
+                                    className="btn-red"
                                 >
                                     Delete
                                 </button>

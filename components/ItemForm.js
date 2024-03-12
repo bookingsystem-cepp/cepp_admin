@@ -9,6 +9,8 @@ _id,
 title:existingTitle, 
 description:existingDescription, 
 amount: existingAmount,
+available: existingAvailable,
+period: existingPeriod,
 images: existingImages,
 category:assignedCategory,
 }) {
@@ -16,6 +18,8 @@ category:assignedCategory,
     const [description, setDescription] = useState(existingDescription || '');
     const [category, setCategory] = useState(assignedCategory || '');
     const [amount, setAmount] = useState(existingAmount || '');
+    const [available, setAvailable] = useState(existingAvailable || '');
+    const [period, setPeriod] = useState(existingPeriod || '');
     const [images, setImages] = useState(existingImages || []);
     const [goToItems, setGoToItems] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
@@ -28,12 +32,13 @@ category:assignedCategory,
     }, [])
     async function saveItem(ev) {
         ev.preventDefault();
-        const data = {title, description, amount, images, category}
+        let data = {title, description, amount, available, period, images, category}
         if (_id) {
             //update
             await axios.put('/api/items', {...data, _id});
         } else {
             //create
+            data.available = amount;
             await axios.post('/api/items', data)
         }
         setGoToItems(true);
@@ -87,7 +92,7 @@ category:assignedCategory,
                     setList={updateImagesOrder}
                 >
                     {!!images?.length && images.map(link => (
-                        <div key={link} className="h-24">
+                        <div key={link} className="h-24 bg-white p-4 shadow-sm rounded-sm border border-gray-200">
                             <img src={link}  alt="" className="rounded-lg"/>
                         </div>
                     ))}
@@ -97,12 +102,12 @@ category:assignedCategory,
                         <Spinner/>
                     </div>
                 )}
-                <label className='w-24 h-24 cursor-pointer text-center flex items-center justify-center text-sm gap-1 text-gray-500 rounded-lg bg-gray-200'>
+                <label className='w-24 h-24 cursor-pointer text-center flex flex-col items-center justify-center text-sm gap-1 text-primary rounded-sm bg-white shadow-sm border border-primary'>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5m-13.5-9L12 3m0 0 4.5 4.5M12 3v13.5" />
                     </svg>
                     <div>
-                        Upload 
+                        Add image 
                     </div>
                     <input type='file' onChange={uploadImages} className='hidden'/>
                 </label>
@@ -120,7 +125,17 @@ category:assignedCategory,
                 type='number' 
                 placeholder='amount'
                 value={amount}
-                onChange={ev => setAmount(ev.target.value)}
+                onChange={ev => {
+                    setAmount(ev.target.value)
+                }}
+            />
+
+            <label>Lending period</label>
+            <input 
+                type='number' 
+                placeholder='days'
+                value={period}
+                onChange={ev => setPeriod(ev.target.value)}
             />
 
             <button 
