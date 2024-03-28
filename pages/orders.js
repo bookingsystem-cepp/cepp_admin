@@ -3,8 +3,9 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { withSwal } from "react-sweetalert2";
 
-export default function Orders() {
+function Orders({ swal }) {
     const [orders, setOrders] = useState([]);
     const {data: session} = useSession();
 
@@ -31,15 +32,15 @@ export default function Orders() {
           .then(async (result) => {
             if (result.isConfirmed) {
               const { _id } = order;
-              const result = await axios.post("http://localhost:8000/api/history/approve",{historyId:id});
+              const result = await axios.post("http://localhost:8000/api/history/approve",{historyId:_id});
               if (result.data === "error") {
                 swal.fire({
-                  title: "Can' Delete!",
-                  text: `Might have items in this category or child category`,
+                  title: "Can't Approve",
+                  text: `Error to approve`,
                   confirmButtonColor: "primary",
                 });
               }
-              fetchCategories();
+              fetchData();
             }
           });
       }
@@ -62,11 +63,11 @@ export default function Orders() {
                         <tr key={order._id}>
                             <td>{index+1}</td>
                             <td>{order.item.title}</td>
-                            <td>{order.borrower.email}</td>
+                            <td><Link className="" href={"/profile/"+order.borrower._id}>{order.borrower.email}</Link></td>
                             <td>{order.status}</td>
                             <td>{order.count}</td>
                             <td>{order.status==='pending'?
-                            <button type="submit" onClick={()=>approve(order)}></button>
+                            <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-3 rounded-full" type="submit" onClick={()=>approve(order)}>Approve</button>
                             :<></>}</td>
                         </tr>
                     ))}
@@ -75,3 +76,5 @@ export default function Orders() {
         </Layout>
     );
 }
+
+export default withSwal(({ swal }, ref) => <Orders swal={swal} />);
