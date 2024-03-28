@@ -9,35 +9,39 @@ function Categories({ swal }) {
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
-  const [parentCategory, setParentCategory] = useState("");
   const [categories, setCategories] = useState([]);
   const { data: session } = useSession();
-  useEffect(() => {
-    fetchCategories();
-    console.log(session.user.id);
-  }, []);
-  function fetchCategories() {
-    axios.get("/api/categories").then((result) => {
+
+  async function fetchCategories() {
+    await axios.get('http://localhost:8000/api/category/get-by-owner/'+session?.user?.id)
+    .then((result) => {
       setCategories(result.data);
-      setParentCategory("");
-    });
+    })
+    .catch((err)=>{console.log(err)});
   }
+
+  useEffect(() => {
+    console.log(session?.user?.id)
+    fetchCategories();
+  }, []);
+
   async function saveCategory(ev) {
     ev.preventDefault();
-    const dataInfo = {
-      name,
-      parentCategory,
-      location,
-      owner: session.user.id,
-      description,
-    };
-    console.log(dataInfo);
     if (editedCategory) {
-      dataInfo._id = editedCategory._id;
-      await axios.put("/api/categories", dataInfo);
+      await axios.put('http://localhost:8000/api/category/update', {
+        id: editedCategory._id,
+        name: name,
+        location: location,
+        description: description,
+      });
       setEditedCategory(null);
     } else {
-      await axios.post("/api/categories", dataInfo);
+      await axios.post("http://localhost:8000/api/category/create", {
+        name: name,
+        location: location,
+        ownerId: session?.user?.id,
+        description: description,
+      });
     }
     setName("");
     setLocation("");
@@ -49,7 +53,7 @@ function Categories({ swal }) {
     setName(category.name);
     setLocation(category.location);
     setDescription(category.description);
-    setParentCategory(category.parent?._id);
+    //setParentCategory(category.parent?._id);
   }
   function deleteCategory(category) {
     swal
@@ -60,7 +64,6 @@ function Categories({ swal }) {
         cancelButtonTitle: "Cancel",
         confirmButtonText: "Yes, Delete!",
         confirmButtonColor: "#d55",
-        reverseButtons: true,
       })
       .then(async (result) => {
         if (result.isConfirmed) {
@@ -99,16 +102,6 @@ function Categories({ swal }) {
             onChange={(ev) => setLocation(ev.target.value)}
             value={location}
           />
-          <select
-            onChange={(ev) => setParentCategory(ev.target.value)}
-            value={parentCategory}
-          >
-            <option value="">No parent category</option>
-            {categories.length > 0 &&
-              categories.map((category) => (
-                <option value={category._id}>{category.name}</option>
-              ))}
-          </select>
         </div>
         <div className="mb-2">
           <label className="block">Description</label>

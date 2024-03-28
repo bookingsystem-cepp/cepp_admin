@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Spinner from "./Spinner";
 import { ReactSortable } from "react-sortablejs";
+import { useSession } from "next-auth/react";
 
 export default function ItemForm({
 _id,
@@ -11,7 +12,7 @@ description:existingDescription,
 amount: existingAmount,
 available: existingAvailable,
 period: existingPeriod,
-images: existingImages,
+image: existingImages,
 category:assignedCategory,
 }) {
     const [title, setTitle] =  useState(existingTitle || '');
@@ -25,21 +26,37 @@ category:assignedCategory,
     const [isUploading, setIsUploading] = useState(false);
     const [categories, setCategories] = useState([]);
     const router = useRouter();
+    const { data: session } = useSession();
     useEffect(() => {
-        axios.get('/api/categories').then(result => {
+        axios.get('http://localhost:8000/api/category/get-by-owner/'+session?.user?.id)
+        .then(result => {
             setCategories(result.data);
         })
+        console.log(title,images,existingImages)
     }, [])
     async function saveItem(ev) {
         ev.preventDefault();
         let data = {title, description, amount, available, period, images, category}
         if (_id) {
             //update
-            await axios.put('/api/items', {...data, _id});
+            await axios.put('http://localhost:8000/api/item/update', {
+                id: _id,
+                title: title,
+                description: description,
+                amount: amount,
+                period: period,
+            });
         } else {
             //create
             data.available = amount;
-            await axios.post('/api/items', data)
+            await axios.post('http://localhost:8000/api/item/create', {
+                title: title,
+                description: description,
+                amount: amount,
+                period: period,
+                image: images,
+                category: category
+            })
         }
         setGoToItems(true);
     }

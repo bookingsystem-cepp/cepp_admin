@@ -1,14 +1,15 @@
 import Layout from "@/components/Layout";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
 export default function Items() {
     const [items, setItems] = useState([]);
+    const {data: session} = useSession();
     useEffect(() => {
-        axios.get('/api/items').then(response => {
-            setItems(response.data);
-        });
+        axios.get('http://localhost:8000/api/item/get-by-owner/'+session?.user?.id)
+        .then(response => {setItems(response.data)});
     }, [])
     return (
         <Layout>

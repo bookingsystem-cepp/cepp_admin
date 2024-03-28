@@ -12,7 +12,9 @@ export default function EditItemPage() {
         if (!id) {
             return;
         }
-        axios.get('/api/items?id='+id).then(response => {
+        axios.get('http://localhost:8000/api/item/get-by-id/'+id)
+        .then(response => {
+            console.log(response.data)
             setItemInfo(response.data);
         });
     }, [id]);
