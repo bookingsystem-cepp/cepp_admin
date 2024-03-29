@@ -28,7 +28,7 @@ category:assignedCategory,
     const router = useRouter();
     const { data: session } = useSession();
     useEffect(() => {
-        axios.get('http://localhost:8000/api/category/get-by-owner/'+session?.user?.id)
+        axios.get('https://backend.tirk101.online/api/category/get-by-owner/'+session?.user?.id)
         .then(result => {
             setCategories(result.data);
         })
@@ -39,7 +39,7 @@ category:assignedCategory,
         let data = {title, description, amount, available, period, images, category}
         if (_id) {
             //update
-            await axios.put('http://localhost:8000/api/item/update', {
+            await axios.put('https://backend.tirk101.online/api/item/update', {
                 id: _id,
                 title: title,
                 description: description,
@@ -49,7 +49,7 @@ category:assignedCategory,
         } else {
             //create
             data.available = amount;
-            await axios.post('http://localhost:8000/api/item/create', {
+            await axios.post('https://backend.tirk101.online/api/item/create', {
                 title: title,
                 description: description,
                 amount: amount,

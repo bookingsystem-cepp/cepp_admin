@@ -13,7 +13,7 @@ function Categories({ swal }) {
   const { data: session } = useSession();
 
   async function fetchCategories() {
-    await axios.get('http://localhost:8000/api/category/get-by-owner/'+session?.user?.id)
+    await axios.get('https://backend.tirk101.online/api/category/get-by-owner/'+session?.user?.id)
     .then((result) => {
       setCategories(result.data);
     })
@@ -28,7 +28,7 @@ function Categories({ swal }) {
   async function saveCategory(ev) {
     ev.preventDefault();
     if (editedCategory) {
-      await axios.put('http://localhost:8000/api/category/update', {
+      await axios.put('https://backend.tirk101.online/api/category/update', {
         id: editedCategory._id,
         name: name,
         location: location,
@@ -36,7 +36,7 @@ function Categories({ swal }) {
       });
       setEditedCategory(null);
     } else {
-      await axios.post("http://localhost:8000/api/category/create", {
+      await axios.post("https://backend.tirk101.online/api/category/create", {
         name: name,
         location: location,
         ownerId: session?.user?.id,

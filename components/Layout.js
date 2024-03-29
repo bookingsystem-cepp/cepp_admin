@@ -8,17 +8,6 @@ export default function Layout({children}) {
   const [showNav, setShowNav] = useState(false);
   const [token, setToken] = useState('');
   const { data: session } = useSession();
-
-  // const signInGoogle = async()=>{
-  //   try {
-  //     // Make a request to your Nest.js backend to initiate the OAuth flow
-  //     const res = await axios.get("http://localhost:8000/api/auth");
-  //     console.log(res);
-  //   } catch (error) {
-  //     console.error('Error signing in with Google:', error);
-  //   }
-  // }
-
   if(!session) {
     return (
       <div className='bg-bgGray w-screen h-screen flex items-center'>

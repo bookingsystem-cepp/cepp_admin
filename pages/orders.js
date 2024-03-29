@@ -10,7 +10,7 @@ function Orders({ swal }) {
     const {data: session} = useSession();
 
     const fetchData = async ()=>{
-        await axios.get('http://localhost:8000/api/history/get-by-owner/'+session?.user?.id)
+        await axios.get('https://backend.tirk101.online/api/history/get-by-owner/'+session?.user?.id)
         .then(response => {setOrders(response.data)})
     }
 
@@ -32,7 +32,7 @@ function Orders({ swal }) {
           .then(async (result) => {
             if (result.isConfirmed) {
               const { _id } = order;
-              const result = await axios.post("http://localhost:8000/api/history/approve",{historyId:_id});
+              const result = await axios.post("https://backend.tirk101.online/api/history/approve",{historyId:_id});
               if (result.data === "error") {
                 swal.fire({
                   title: "Can't Approve",

@@ -11,7 +11,7 @@ export default function DeleteItemPage() {
         if (!id) {
             return;
         }
-        axios.get('/api/items?id='+id).then(response => {
+        axios.get('https://backend.tirk101.online/api/get-by-id/'+id).then(response => {
             setItemInfo(response.data);
         });
     }, [id]);

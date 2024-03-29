@@ -8,7 +8,7 @@ export default function Items() {
     const [items, setItems] = useState([]);
     const {data: session} = useSession();
     useEffect(() => {
-        axios.get('http://localhost:8000/api/item/get-by-owner/'+session?.user?.id)
+        axios.get('https://backend.tirk101.online/api/item/get-by-owner/'+session?.user?.id)
         .then(response => {setItems(response.data)});
     }, [])
     return (

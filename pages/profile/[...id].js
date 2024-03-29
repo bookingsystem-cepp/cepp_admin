@@ -10,40 +10,13 @@ const Profile = ()=> {
     const [user, setUser] = useState([]);
 
     const fetchData = async ()=>{
-        await axios.get('http://54.179.58.129:8000/api/user/get-by-id/'+id)
+        await axios.get('https://backend.tirk101.online/api/user/get-by-id/'+id)
         .then(response => {setUser(response.data)})
     }
 
     useEffect(() => {
         fetchData();
     }, [])
-
-    // function approve(order) {
-    //     swal
-    //       .fire({
-    //         title: "Are you sure?",
-    //         text: `Do you want to approve`,
-    //         showCancelButton: true,
-    //         cancelButtonTitle: "Cancel",
-    //         confirmButtonText: "Yes, Approve!",
-    //         confirmButtonColor: "#39e75f",
-    //       })
-    //       .then(async (result) => {
-    //         if (result.isConfirmed) {
-    //           const { _id } = order;
-    //           const result = await axios.post("http://localhost:8000/api/history/approve",{historyId:_id});
-    //           if (result.data === "error") {
-    //             swal.fire({
-    //               title: "Can't Approve",
-    //               text: `Error to approve`,
-    //               confirmButtonColor: "primary",
-    //             });
-    //           }
-    //           fetchData();
-    //         }
-    //       });
-    //   }
-
     return (
         <Layout>
             <div className="mx-auto max-w-242.5">
