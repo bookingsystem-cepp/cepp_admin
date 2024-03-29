@@ -8,17 +8,6 @@ const adminEmails = ['jinokrit@gmail.com', '64010022@kmitl.ac.th','64010001@kmit
 const DEFAULT_SCORES = 100;
 const DEFAULT_YEAR = new Date().getFullYear();
 
-export default NextAuth(authConfig)
-
-export async function isAdminRequest(req, res) {
-  const session = await getServerSession(req, res, authConfig);
-  if (!adminEmails.includes(session?.user?.email)) {
-    res.status(401);
-    res.end();
-    throw 'not an admin';
-  }
-}
-
 const authConfig = {
   providers: [
     GoogleProvider({
@@ -61,3 +50,15 @@ const authConfig = {
   // Define NEXTAUTH_URL environment variable
   site: process.env.NEXTAUTH_URL || 'http://localhost:3000', // Change the default URL here
 };
+
+export default NextAuth(authConfig)
+
+export async function isAdminRequest(req, res) {
+  const session = await getServerSession(req, res, authConfig);
+  if (!adminEmails.includes(session?.user?.email)) {
+    res.status(401);
+    res.end();
+    throw 'not an admin';
+  }
+}
+
