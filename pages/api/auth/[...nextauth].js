@@ -18,14 +18,6 @@ const authOption = {
   ],
   adapter: MongoDBAdapter(clientPromise),
   callbacks: {
-    // async signIn(user, account, profile) {
-    //   // You can perform additional actions after successful sign-in
-    //   return true;
-    // },
-    // async redirect(url, baseUrl) {
-    //   // Redirect to the desired page after sign-in
-    //   return baseUrl;
-    // },
     session: async ({session, token, user}) => {
       if (adminEmails.includes(session?.user?.email)) {
         if (user) {
@@ -39,13 +31,7 @@ const authOption = {
             year: DEFAULT_YEAR,
             scores: DEFAULT_SCORES,
           };
-    
-          // const res = await axios.post(
-          //   process.env.API_PATH+'/api/auth/generate-token',
-          //   {
-          //     email: session?.user?.email,
-          //   })
-
+          
           // Update user data in the database
           await MongoDBAdapter(clientPromise).updateUser(updatedUser);
   
