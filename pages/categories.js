@@ -68,7 +68,7 @@ function Categories({ swal }) {
       .then(async (result) => {
         if (result.isConfirmed) {
           const { _id } = category;
-          const result = await axios.delete("/api/categories?_id=" + _id);
+          await axios.delete("https://backend.tirk101.online/api/category/delete/" + _id);
           if (result.data === "error") {
             swal.fire({
               title: "Can' Delete!",

@@ -11,7 +11,7 @@ export default function DeleteItemPage() {
         if (!id) {
             return;
         }
-        axios.get('https://backend.tirk101.online/api/get-by-id/'+id).then(response => {
+        axios.get('https://backend.tirk101.online/api/item/get-by-id/'+id).then(response => {
             setItemInfo(response.data);
         });
     }, [id]);
@@ -19,7 +19,7 @@ export default function DeleteItemPage() {
         router.push('/items');
     }    
     async function deleteItem() {
-        await axios.delete('/api/items?id='+id);
+        await axios.delete('https://backend.tirk101.online/api/item/delete/'+id);
         goBack();
     }
     return (
