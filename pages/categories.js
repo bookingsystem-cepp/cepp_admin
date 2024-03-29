@@ -23,7 +23,7 @@ function Categories({ swal }) {
   useEffect(() => {
     console.log(session?.user?.id)
     fetchCategories();
-  }, []);
+  }, [session?.user?.id]);
 
   async function saveCategory(ev) {
     ev.preventDefault();
@@ -125,8 +125,8 @@ function Categories({ swal }) {
         </thead>
         <tbody>
           {categories.length > 0 &&
-            categories.map((category) => (
-              <tr>
+            categories.map((category, key) => (
+              <tr key={index}>
                 <td>{category.name}</td>
                 <td>{category?.parent?.name}</td>
                 <td>

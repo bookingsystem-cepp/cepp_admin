@@ -24,7 +24,7 @@ export default function DeleteItemPage() {
     }
     return (
         <Layout>
-            <h1 className="text-center">Do you really want to delete &nbsp;"{itemInfo?.title}"?</h1>
+            <h1 className="text-center">Do you really want to delete &nbsp;&quot;{itemInfo?.title}&quot;?</h1>
             
             <div className='flex gap-2 justify-center'>
                 <button className='btn-red' onClick={deleteItem}>Yes</button>

@@ -96,8 +96,8 @@ category:assignedCategory,
                 onChange={ev => setCategory(ev.target.value)}
             >
                 <option value=''>Uncategorized</option>
-                {categories.length > 0 && categories.map(category => (
-                    <option value={category._id}>{category.name}</option>
+                {categories.length > 0 && categories.map((category, key) => (
+                    <option key={category._id} value={category._id}>{category.name}</option>
                 ))}
             </select>
 
